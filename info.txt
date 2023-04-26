@@ -1,0 +1,1 @@
+npm init --scope @monorepo --workspace ./packages/utils -y     ==>  use this command to initialize a new local package.
