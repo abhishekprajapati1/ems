@@ -1,12 +1,12 @@
 {
   "name": "fullstack",
   "version": "1.0.0",
-  "main": "index.js",
   "author": "abhishek",
   "license": "MIT",
   "private": true,
   "workspaces": [
-    "apps/*"
+    "server",
+    "client"
   ],
   "devDependencies": {
     "@types/node": "^18.16.1",
