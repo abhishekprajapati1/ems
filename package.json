@@ -8,6 +8,9 @@
     "server",
     "client"
   ],
+  "scripts": {
+    "dev": "concurrently --kill-others \"yarn workspace client run dev\" \"yarn workspace server run dev\""
+  },
   "devDependencies": {
     "@types/node": "^18.16.1",
     "@typescript-eslint/eslint-plugin": "^5.59.1",
@@ -17,6 +20,7 @@
     "typescript": "^5.0.4"
   },
   "dependencies": {
+    "concurrently": "^8.0.1",
     "eslint": "^8.39.0"
   }
 }
