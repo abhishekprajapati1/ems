@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import { Inter } from 'next/font/google';
-import axios from 'axios';
 import { useState, useEffect } from 'react';
+import api from '@api/api';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -10,7 +10,7 @@ export default function Home() {
 
   const testbackendApi = async () => {
     try {
-      const res = await axios.get("/api/data")
+      const res = await api.get("data")
       setData(res.data);
     } catch (error) {
       console.log("see error", error);
