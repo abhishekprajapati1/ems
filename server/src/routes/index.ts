@@ -1,9 +1,9 @@
 import express from 'express';
-import adminRouter from './admin.routes';
+import adminRouter from './user.routes';
 
 const appRouter = express.Router();
 
-appRouter.use("/admin", adminRouter);
+appRouter.use("/user", adminRouter);
 // appRouter.get("", defaultRouter);
 
 export default appRouter;

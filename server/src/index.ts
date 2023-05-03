@@ -1,6 +1,5 @@
 import express, { Express, Request, Response } from 'express';
 import dotenv from 'dotenv';
-// import bodyParser from 'body-parser';
 import appRouter from '@routes/index';
 import connect_db from './configs/connect_db';
 
@@ -20,9 +19,6 @@ app.get("/data", (req: Request, res: Response) => {
 })
 
 
-
-// app.use(bodyParser.json());
-// app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use("", appRouter);

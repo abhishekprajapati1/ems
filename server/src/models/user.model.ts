@@ -1,15 +1,16 @@
 import { Schema, model } from "mongoose";
 import bcrypt from 'bcrypt';
 
-interface IManager {
+interface IUser {
     name: string,
     email: string,
     password: string,
-    date_of_birth: string
+    date_of_birth: string,
+    role: string,
 }
 
 
-const ManagerSchema = new Schema<IManager>(
+const UserSchema = new Schema<IUser>(
     {
         name: {
             type: String,
@@ -26,6 +27,10 @@ const ManagerSchema = new Schema<IManager>(
         date_of_birth: {
             type: String,
             required: true
+        },
+        role: {
+            type: String,
+            required: true
         }
     }
 );
@@ -34,7 +39,7 @@ const ManagerSchema = new Schema<IManager>(
 
 // we need to has the password before saving it in database
 // we cannot use arrow function here as we cannot use a lexical function inside an standard function.
-ManagerSchema.pre("save", async function (next) {
+UserSchema.pre("save", async function (next) {
     // if the password field is already hashed we simply return the control to the save method of singup controller
     if (!this.isModified("password")) {
         return next();
@@ -47,9 +52,9 @@ ManagerSchema.pre("save", async function (next) {
 });
 
 // Here we create a model method checkPassword which will be used to compare the password at login time.
-ManagerSchema.methods.checkPassword = async function (password: string) {
+UserSchema.methods.checkPassword = async function (password: string) {
     return await bcrypt.compare(password, this.password);
 }
 
-const Manager = model<IManager>('manager', ManagerSchema);
-export default Manager;
+const User = model<IUser>('user', UserSchema);
+export default User;
