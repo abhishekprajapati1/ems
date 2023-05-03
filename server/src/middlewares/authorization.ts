@@ -1,8 +1,13 @@
 import { Request, Response, NextFunction } from "express";
 
+interface IAuthUserRequest extends Request {
+    user: {
+        roles: Array<string>
+    }
+}
 
 function authorize(permittedRoles: Array<string>) {
-    return function (req: Request, res: Response, next: NextFunction) {
+    return function (req: IAuthUserRequest, res: Response, next: NextFunction) {
         // first get the user from the req
         const user = req.user;
 
