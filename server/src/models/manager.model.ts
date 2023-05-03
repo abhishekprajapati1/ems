@@ -5,6 +5,7 @@ interface IManager {
     name: string,
     email: string,
     password: string,
+    date_of_birth: string
 }
 
 
@@ -21,6 +22,10 @@ const ManagerSchema = new Schema<IManager>(
         password: {
             type: String,
             required: true
+        },
+        date_of_birth: {
+            type: String,
+            required: true
         }
     }
 );
@@ -31,7 +36,6 @@ const ManagerSchema = new Schema<IManager>(
 // we cannot use arrow function here as we cannot use a lexical function inside an standard function.
 ManagerSchema.pre("save", async function (next) {
     // if the password field is already hashed we simply return the control to the save method of singup controller
-    console.log(this);
     if (!this.isModified("password")) {
         return next();
     }
@@ -47,5 +51,5 @@ ManagerSchema.methods.checkPassword = async function (password: string) {
     return await bcrypt.compare(password, this.password);
 }
 
-const Manager = model<IManager>('admin', ManagerSchema);
+const Manager = model<IManager>('manager', ManagerSchema);
 export default Manager;
