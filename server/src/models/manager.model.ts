@@ -1,8 +1,14 @@
-import mongoose from "mongoose";
+import { Schema, model } from "mongoose";
 import bcrypt from 'bcrypt';
-const Schema = mongoose.Schema;
 
-const ManagerSchema = new Schema(
+interface IManager {
+    name: string,
+    email: string,
+    password: string,
+}
+
+
+const ManagerSchema = new Schema<IManager>(
     {
         name: {
             type: String,
@@ -41,5 +47,5 @@ ManagerSchema.methods.checkPassword = async function (password: string) {
     return await bcrypt.compare(password, this.password);
 }
 
-const Manager = mongoose.model('admin', ManagerSchema);
+const Manager = model<IManager>('admin', ManagerSchema);
 export default Manager;
