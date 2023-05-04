@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { useForm, SubmitHandler } from 'react-hook-form';
+import { login } from '@api/auth';
 
 
 type FormValues = {
@@ -11,8 +12,10 @@ const Login = () => {
 
     const { register, handleSubmit } = useForm<FormValues>();
 
-    const onSubmit: SubmitHandler<FormValues> = (data) => {
+    const onSubmit: SubmitHandler<FormValues> = async (data) => {
         console.log("see payload", data);
+        const res = await login(data);
+        console.log("see the login res", res);
     }
 
 

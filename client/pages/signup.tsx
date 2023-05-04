@@ -1,20 +1,30 @@
+import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { useForm, SubmitHandler } from 'react-hook-form';
+import { createUser } from '@api/auth';
+import { toast } from 'react-toastify';
 
 
 type FormValues = {
-    full_name: string,
+    name: string,
     date_of_birth: string,
     email: string,
     password: string,
+    role: string,
 }
 
 const SignUp = () => {
-
+    const router = useRouter();
     const { register, handleSubmit } = useForm<FormValues>();
 
-    const onSubmit: SubmitHandler<FormValues> = (data) => {
-        console.log("see payload", data);
+    const onSubmit: SubmitHandler<FormValues> = async (data) => {
+        const res = await createUser(data);
+        if (res.success) {
+            router.replace("/login");
+            toast.success(res.message);
+        } else {
+            toast.error(res.message);
+        }
     }
 
 
@@ -26,7 +36,7 @@ const SignUp = () => {
                     type="text"
                     className="w-full border border-blue-300 mb-3 py-2 px-6 outline-none rounded-[10rem] focus:ring-1 focus:ring-blue-500 focus:bg-blue-100"
                     placeholder="John Doe"
-                    {...register("full_name")}
+                    {...register("name")}
                 />
                 <input
                     type="date"
@@ -45,6 +55,14 @@ const SignUp = () => {
                     placeholder='Password'
                     {...register("password")}
                 />
+
+                <div>
+                    <select className="w-full border border-blue-300 mb-3 py-2 px-6 outline-none rounded-[10rem] focus:ring-1 focus:ring-blue-500 focus:bg-blue-100" id="role" {...register("role")}>
+                        <option value="" disabled>Select Role</option>
+                        <option value="manager">Manager</option>
+                        <option value="employee">Employee</option>
+                    </select>
+                </div>
 
                 <div className="text-center mt-2">
                     <button

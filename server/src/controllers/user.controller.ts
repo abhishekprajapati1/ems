@@ -1,17 +1,22 @@
-import { Request, Response } from "express";
+import { CookieOptions, Request, Response } from "express";
+import dotenv from 'dotenv';
+import { sign } from 'jsonwebtoken';
+
 import User from "@models/user.model";
+
+dotenv.config();
 
 export const createUser = async (req: Request, res: Response) => {
     const { name, email, password, date_of_birth, role } = req.body;
 
     if (!name || !email || !password || !date_of_birth || !role) {
-        return res.status(401).json({ msg: "Please fill each fields." });
+        return res.status(401).json({ success: false, message: "Please fill each fields." });
     }
 
     try {
         const userExist = await User.findOne({ email: email });
         if (userExist) {
-            return res.status(400).json({ msg: "An user already exists with the same email id." });
+            return res.status(400).json({ success: false, message: "An user already exists with the same email id." });
         }
 
         // finaly create a user instance
@@ -31,3 +36,43 @@ export const createUser = async (req: Request, res: Response) => {
     }
 }
 
+
+export const loginUser = async (req: Request, res: Response) => {
+    const SECRET_KEY = process.env.SECRETKEY;
+    try {
+        const { email, password } = req.body;
+
+        // ensuring none of the field is empty
+        if (!email || !password) {
+            return res.status(401).json({ success: false, message: "Please fill each fields." });
+        }
+
+        // checking whether admin exist
+        const foundUser = await User.findOne({ email: email });
+        if (!foundUser) {
+            return res.status(400).json({ success: false, message: "Invalid email or password" });
+        }
+
+        // check with saved password
+        const isPasswordCorrect = foundUser.checkPassword(password);
+        if (!isPasswordCorrect) {
+            return res.status(400).json({ success: false, message: "Invalid email or password" })
+        }
+
+        // // if the password is correct then we create a token for the user
+
+        // const token = sign({ foundUser }, SECRET_KEY, {});
+
+        // // send a cookie containing the token
+        // res.cookie('authtoken', token, {
+        //     expires: new Date(Date.now() + (24 * 60 * 60 * 1000)),
+        //     httpOnly: true,
+        //     sameSite: "none",
+        //     secure: false,
+        // } as CookieOptions);
+
+        return res.status(200).json({ success: true, message: "Logged in successfully", data: isPasswordCorrect });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: "Internal Server Error" });
+    }
+}

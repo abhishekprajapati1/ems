@@ -7,6 +7,7 @@ interface IUser {
     password: string,
     date_of_birth: string,
     role: string,
+    checkPassword: (password: string) => boolean,
 }
 
 

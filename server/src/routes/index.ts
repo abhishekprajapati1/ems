@@ -1,9 +1,11 @@
 import express from 'express';
-import adminRouter from './user.routes';
+import userRouter from './user.routes';
+import { loginUser } from '@controllers/user.controller';
 
 const appRouter = express.Router();
 
-appRouter.use("/user", adminRouter);
+appRouter.use("/user", userRouter);
+appRouter.post('/login', loginUser);
 // appRouter.get("", defaultRouter);
 
 export default appRouter;
