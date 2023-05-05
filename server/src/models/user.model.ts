@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose";
+import { Schema, model, Document } from "mongoose";
 import bcrypt from 'bcrypt';
 
 interface IUser {
@@ -7,11 +7,14 @@ interface IUser {
     password: string,
     date_of_birth: string,
     role: string,
-    checkPassword: (password: string) => boolean,
+}
+
+interface IUserDocument extends IUser, Document {
+    checkPassword: (password: string) => Promise<boolean>,
 }
 
 
-const UserSchema = new Schema<IUser>(
+const UserSchema = new Schema<IUserDocument>(
     {
         name: {
             type: String,
@@ -57,5 +60,5 @@ UserSchema.methods.checkPassword = async function (password: string) {
     return await bcrypt.compare(password, this.password);
 }
 
-const User = model<IUser>('user', UserSchema);
+const User = model<IUserDocument>('user', UserSchema);
 export default User;

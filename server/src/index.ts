@@ -19,6 +19,7 @@ app.get("/data", (req: Request, res: Response) => {
 })
 
 
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use("", appRouter);

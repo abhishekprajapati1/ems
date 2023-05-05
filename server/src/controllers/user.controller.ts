@@ -1,6 +1,6 @@
 import { CookieOptions, Request, Response } from "express";
 import dotenv from 'dotenv';
-import { sign } from 'jsonwebtoken';
+import { SignOptions, sign } from 'jsonwebtoken';
 
 import User from "@models/user.model";
 
@@ -38,7 +38,9 @@ export const createUser = async (req: Request, res: Response) => {
 
 
 export const loginUser = async (req: Request, res: Response) => {
-    const SECRET_KEY = process.env.SECRETKEY;
+    
+    const SECRET_KEY: any = process.env.SECRETKEY;
+
     try {
         const { email, password } = req.body;
 
@@ -54,25 +56,29 @@ export const loginUser = async (req: Request, res: Response) => {
         }
 
         // check with saved password
-        const isPasswordCorrect = foundUser.checkPassword(password);
+        const isPasswordCorrect = await foundUser.checkPassword(password);
+
         if (!isPasswordCorrect) {
-            return res.status(400).json({ success: false, message: "Invalid email or password" })
+            return res.status(400).json({ success: false, message: "Invalid email or password" });
         }
 
         // // if the password is correct then we create a token for the user
+        console.log("working till here", SECRET_KEY);
+        const token = sign(foundUser, SECRET_KEY);
+        console.log("working till here");
 
-        // const token = sign({ foundUser }, SECRET_KEY, {});
+        // send a cookie containing the token
+        res.cookie('authtoken', "set byy backend", {
+            expires: new Date(Date.now() + (24 * 60 * 60 * 1000)),
+            httpOnly: true,
+            // sameSite: "none",
+            // secure: "false",
+        } as CookieOptions);
 
-        // // send a cookie containing the token
-        // res.cookie('authtoken', token, {
-        //     expires: new Date(Date.now() + (24 * 60 * 60 * 1000)),
-        //     httpOnly: true,
-        //     sameSite: "none",
-        //     secure: false,
-        // } as CookieOptions);
+        return res.status(200).json({ success: true, message: "Logged in successfully" });
 
-        return res.status(200).json({ success: true, message: "Logged in successfully", data: isPasswordCorrect });
+
     } catch (error) {
-        return res.status(500).json({ success: false, message: "Internal Server Error" });
+        return res.status(500).json({ success: false, message: "Internal Server Error", error: error });
     }
 }
