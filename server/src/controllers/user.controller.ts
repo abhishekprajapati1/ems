@@ -1,10 +1,8 @@
 import { CookieOptions, Request, Response } from "express";
-import dotenv from 'dotenv';
-import { SignOptions, sign } from 'jsonwebtoken';
+import createToken from "@middlewares/createToken";
 
 import User from "@models/user.model";
 
-dotenv.config();
 
 export const createUser = async (req: Request, res: Response) => {
     const { name, email, password, date_of_birth, role } = req.body;
@@ -38,8 +36,6 @@ export const createUser = async (req: Request, res: Response) => {
 
 
 export const loginUser = async (req: Request, res: Response) => {
-    
-    const SECRET_KEY: any = process.env.SECRETKEY;
 
     try {
         const { email, password } = req.body;
@@ -62,13 +58,11 @@ export const loginUser = async (req: Request, res: Response) => {
             return res.status(400).json({ success: false, message: "Invalid email or password" });
         }
 
-        // // if the password is correct then we create a token for the user
-        console.log("working till here", SECRET_KEY);
-        const token = sign(foundUser, SECRET_KEY);
-        console.log("working till here");
+        // if the password is correct then we create a token for the user
+        const token = createToken({ _id: foundUser._id, email: foundUser.email, role: foundUser.role })
 
         // send a cookie containing the token
-        res.cookie('authtoken', "set byy backend", {
+        res.cookie('authtoken', token, {
             expires: new Date(Date.now() + (24 * 60 * 60 * 1000)),
             httpOnly: true,
             // sameSite: "none",
@@ -76,8 +70,6 @@ export const loginUser = async (req: Request, res: Response) => {
         } as CookieOptions);
 
         return res.status(200).json({ success: true, message: "Logged in successfully" });
-
-
     } catch (error) {
         return res.status(500).json({ success: false, message: "Internal Server Error", error: error });
     }
