@@ -1,3 +1,7 @@
+import { GetServerSideProps } from 'next';
+import { useRouter } from 'next/router';
+import { getCookie } from 'cookies-next';
+import { logout } from '@api/auth';
 import Image from 'next/image'
 import { Inter } from 'next/font/google';
 import { useState, useEffect } from 'react';
@@ -6,6 +10,7 @@ import api from '@api/api';
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
+  const router = useRouter();
   const [data, setData] = useState({});
 
   const testbackendApi = async () => {
@@ -14,6 +19,13 @@ export default function Home() {
       setData(res.data);
     } catch (error) {
       console.log("see error", error);
+    }
+  }
+
+  const handleLogout = async () => {
+    const res = await logout();
+    if (res.success) {
+      router.reload();
     }
   }
 
@@ -34,6 +46,7 @@ export default function Home() {
         <p>{data?.data?.name}</p>
         <p>{data?.data?.age}</p>
         <p>{data?.data?.address}</p>
+        <button onClick={() => handleLogout()}>Logout</button>
         <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
           <a
             className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
@@ -136,4 +149,20 @@ export default function Home() {
       </div>
     </main>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+  const token = getCookie("authtoken", { req, res })
+  if (!token) {
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      }
+    }
+  }
+
+  return {
+    props: {}
+  }
 }

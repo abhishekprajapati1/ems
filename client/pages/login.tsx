@@ -1,6 +1,10 @@
+import { GetServerSideProps } from 'next';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { login } from '@api/auth';
+import { toast } from 'react-toastify';
+import { getCookie } from 'cookies-next';
 
 
 type FormValues = {
@@ -9,13 +13,17 @@ type FormValues = {
 }
 
 const Login = () => {
-
+    const router = useRouter();
     const { register, handleSubmit } = useForm<FormValues>();
 
     const onSubmit: SubmitHandler<FormValues> = async (data) => {
-        console.log("see payload", data);
         const res = await login(data);
-        console.log("see the login res", res);
+        if (res.success) {
+            toast.success(res.message);
+            router.push('/');
+        } else {
+            toast.error(res.message);
+        }
     }
 
 
@@ -49,5 +57,25 @@ const Login = () => {
         </section>
     )
 }
+
+
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+    const token = getCookie("authtoken", { req, res });
+    if (token) {
+        return {
+            redirect: {
+                destination: "/",
+                permanent: false,
+            }
+        }
+    }
+
+    return {
+        props: {
+
+        }
+    }
+}
+
 
 export default Login;

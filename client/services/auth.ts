@@ -33,3 +33,12 @@ export const login = async (payload: { email: string, password: string }) => {
         throw error;
     }
 }
+
+export const logout = async () => {
+    try {
+        const res = await api.get('logout');
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+}

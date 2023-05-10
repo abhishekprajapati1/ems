@@ -1,5 +1,6 @@
 import { CookieOptions, Request, Response } from "express";
 import createToken from "@middlewares/createToken";
+import { IUserRequest } from "@middlewares/authenticate";
 
 import User from "@models/user.model";
 
@@ -72,5 +73,19 @@ export const loginUser = async (req: Request, res: Response) => {
         return res.status(200).json({ success: true, message: "Logged in successfully" });
     } catch (error) {
         return res.status(500).json({ success: false, message: "Internal Server Error", error: error });
+    }
+}
+
+
+
+export const logoutUser = async (req: IUserRequest, res: Response) => {
+
+    console.log("see user", req.user);
+
+    try {
+        res.clearCookie("authtoken");
+        res.status(200).json({ success: true, message: "Logged out successfully" });
+    } catch (error) {
+        res.status(500).json({ success: false, message: "Logged out successfully", error });
     }
 }
