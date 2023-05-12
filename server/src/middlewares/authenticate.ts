@@ -16,7 +16,11 @@ const verifyToken = (token: string): Promise<{}> => {
 
 
 export interface IUserRequest extends Request {
-    user?: object,
+    user?: {
+        _id?: string,
+        email?: string,
+        role?: string,
+    },
 }
 
 const authenticate = async (req: IUserRequest, res: Response, next: NextFunction) => {

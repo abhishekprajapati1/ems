@@ -1,11 +1,10 @@
 import express, { Request, Response } from 'express';
-import { createUser, logoutUser } from '@controllers/user.controller';
+import { createUser, getUser } from '@controllers/user.controller';
+import authenticate from '@middlewares/authenticate';
 
 const userRouter = express.Router();
 
-userRouter.get("", (req: Request, res: Response) => {
-    res.send("working");
-})
+userRouter.get("", authenticate, getUser);
 
 userRouter.post("", createUser);
 

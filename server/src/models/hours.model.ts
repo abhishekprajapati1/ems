@@ -12,6 +12,7 @@ const hoursSchema = new Schema<IHours>({
     date: {
         type: String,
         required: true,
+        default: new Date(Date.now()).toLocaleDateString(),
     },
     start_time: {
         type: String,

@@ -3,7 +3,18 @@ import createToken from "@middlewares/createToken";
 import { IUserRequest } from "@middlewares/authenticate";
 
 import User from "@models/user.model";
+import Hours from "@models/hours.model";
 
+
+export const getUser = async (req: IUserRequest, res: Response) => {
+    try {
+        const user_id = req.user?._id;
+        const user = await User.findById(user_id)
+        res.status(200).json({ success: true, data: user });
+    } catch (error) {
+        res.status(500).json({ success: false, message: "Internal Server Error", error })
+    }
+}
 
 export const createUser = async (req: Request, res: Response) => {
     const { name, email, password, date_of_birth, role } = req.body;
@@ -77,7 +88,6 @@ export const loginUser = async (req: Request, res: Response) => {
 }
 
 
-
 export const logoutUser = async (req: IUserRequest, res: Response) => {
 
     console.log("see user", req.user);
@@ -89,3 +99,13 @@ export const logoutUser = async (req: IUserRequest, res: Response) => {
         res.status(500).json({ success: false, message: "Logged out successfully", error });
     }
 }
+
+export const getPunch = async (req: IUserRequest, res: Response) => {
+    res.status(200).json({ success: true, message: "sdlkfj" });
+    try {
+        const punch = await Hours.findOne({ user_id: req.user?._id, date: Date.now() });
+        res.status(200).json({ success: true, data: punch });
+    } catch (error) {
+        res.status(500).json({ success: false, message: "Internal Server Error", error })
+    }
+}   

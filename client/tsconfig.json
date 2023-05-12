@@ -22,7 +22,10 @@
       "@api/*": [
         "./services/*"
       ],
-      "@styles/*": ["./styles/*"]
+      "@styles/*": ["./styles/*"],
+      "@components/*": ["./components/*"],
+      "@queries/*": ["./libs/queries/*"],
+      "@mutations/*": ["./libs/mutations/*"],
     }
   },
   "include": [
