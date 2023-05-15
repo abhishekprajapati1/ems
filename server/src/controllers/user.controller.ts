@@ -100,12 +100,3 @@ export const logoutUser = async (req: IUserRequest, res: Response) => {
     }
 }
 
-export const getPunch = async (req: IUserRequest, res: Response) => {
-    res.status(200).json({ success: true, message: "sdlkfj" });
-    try {
-        const punch = await Hours.findOne({ user_id: req.user?._id, date: Date.now() });
-        res.status(200).json({ success: true, data: punch });
-    } catch (error) {
-        res.status(500).json({ success: false, message: "Internal Server Error", error })
-    }
-}   

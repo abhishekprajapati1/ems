@@ -1,4 +1,5 @@
 import { Schema, model, Document } from 'mongoose';
+import dayjs from 'dayjs';
 
 interface IHours {
     date: string,
@@ -6,19 +7,22 @@ interface IHours {
     end_time: string,
     user_id: string,
     total_hours: number,
+    start: string,
+    end: string
 }
 
 const hoursSchema = new Schema<IHours>({
     date: {
         type: String,
         required: true,
-        default: new Date(Date.now()).toLocaleDateString(),
+        default: dayjs().format("DD/MM/YYYY"),
     },
-    start_time: {
+    start: {
         type: String,
-        required: true,
     },
-    end_time: { type: String },
+    end: {
+        type: String,
+    },
     user_id: { type: String, required: true },
     total_hours: { type: Number }
 });

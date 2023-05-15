@@ -18,3 +18,12 @@ export const getPunch = async () => {
         throw error;
     }
 }
+
+export const punchIn = async () => {
+    try {
+        const res = await api.get('punch/in');
+        return res;
+    } catch (error) {
+        return error;
+    }
+}
