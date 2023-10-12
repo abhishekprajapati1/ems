@@ -27,7 +27,10 @@ class LoginView(APIView):
                     'refresh': str(refresh),
                     'access_token': str(refresh.access_token)
                 }
-                return Response(token, status=status.HTTP_200_OK)
+                response = Response(token, status=status.HTTP_200_OK)
+                response.set_cookie(key='access_token', value=str(refresh.access_token), max_age=24*60*60, secure=True, httponly=True)
+                response.set_cookie(key='refresh_token', value=str(refresh), max_age=24*60*60, secure=True, httponly=True)
+                return response
             else:
                 return Response({"message": "Authentication Failed"}, status=status.HTTP_401_UNAUTHORIZED)
         
