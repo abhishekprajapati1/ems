@@ -48,7 +48,7 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    'authentication.middleware.TokenRenewalMiddleware', # this rotates access token
+    # 'authentication.middleware.TokenRenewalMiddleware', # this rotates access token
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -138,7 +138,7 @@ AUTHENTICATION_BACKENDS = [
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'authentication.auth.CookieJWTAuthentication', # it will validate token from cookie
-        'rest_framework_simplejwt.authentication.JWTAuthentication',  # Use JWTAuthentication
+        # 'rest_framework_simplejwt.authentication.JWTAuthentication',  # Use JWTAuthentication
     ],
 }
 
