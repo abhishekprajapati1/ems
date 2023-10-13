@@ -13,24 +13,18 @@ class CookieJWTAuthentication(JWTAuthentication):
 
     def authenticate(self, request):
         token = request.COOKIES['access_token']
-        user = None
+        validated_token = None
         if not token:
-            msg = _('Login first')
+            msg = _('Access denied')
             raise exceptions.AuthenticationFailed(msg)
 
         try:
-            token = AccessToken(token=token)
-            user = self.get_user(token)
-        except TokenError:
-            raise exceptions.AuthenticationFailed(_('Invalid token.'))
+            validated_token = super().get_validated_token(raw_token=token)
+        except:
+            raise exceptions.AuthenticationFailed(_("Please provide a valid authentication token"))
+        
 
-        # if not token.user.is_active:
-        #     raise exceptions.AuthenticationFailed(_('User inactive or deleted.'))
-        print(token['user_id'], user.id)
-        return (user, token)
-
-    def get_validated_token(self, raw_token):
-        return super().get_validated_token(raw_token=raw_token)
+        return self.get_user(validated_token), validated_token
     
     def get_user(self, validated_token):
         user = User.objects.get(id=validated_token['user_id'])
