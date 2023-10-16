@@ -1,5 +1,8 @@
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
+from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
+from rest_framework import exceptions
+from utils.auth import should_authenticate
 
 
 class TokenRenewalMiddleware:
@@ -7,10 +10,14 @@ class TokenRenewalMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-        if not self.should_renew_token(request):
+        if not should_authenticate(request):
             return self.get_response(request)
 
         access_token = request.COOKIES.get('access_token')
+
+        if not access_token:
+            msg = _('Access denied')
+            raise exceptions.AuthenticationFailed(msg)
 
         try:
             token = AccessToken(access_token)
@@ -35,7 +42,3 @@ class TokenRenewalMiddleware:
             return self.get_response(request)
 
         return self.get_response(request)
-
-    def should_renew_token(self, request):
-        excluded_paths = ['/api/auth/login', '/api/auth/signup']
-        return not any(request.path_info.startswith(path) for path in excluded_paths)

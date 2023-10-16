@@ -28,14 +28,6 @@ class Branch(models.Model):
     opening_hours = models.JSONField(default=list, help_text="List of opening hours for the branch")
     contacts = models.JSONField(default=list, help_text="List of contact information for the branch")
 
-
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(fields=['owner', models.F('name__iexact')],
-                                    name='unique_branch_within_user_scope')
-        ]
-
-
     def save(self, *args, **kwargs):
         # Ensure case-insensitive uniqueness within the user's scope
         try:
