@@ -26,7 +26,9 @@ SECRET_KEY = 'django-insecure-6nvr5+tff@5h8i*q$wsj2kn(t^w8z^)&sy21&a1^c56h+4&wa@
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    # "restfox.dev"
+]
 
 
 # Application definition
@@ -39,8 +41,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'authentication',
-    'owner'
+    'authentication.apps.AuthenticationConfig',
+    'owner.apps.OwnerConfig',
+    'departments.apps.DepartmentsConfig',
+    'employee.apps.EmployeeConfig',
+    'branches.apps.BranchesConfig',
 ]
 
 MIDDLEWARE = [

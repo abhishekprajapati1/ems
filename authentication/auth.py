@@ -1,19 +1,25 @@
+from typing import Any
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.utils.translation import gettext_lazy as _
+from rest_framework.response import Response
 from rest_framework import exceptions
-from rest_framework_simplejwt.tokens import AccessToken
-from rest_framework_simplejwt.exceptions import TokenError
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
 class CookieJWTAuthentication(JWTAuthentication):
+    """
+        A Cookie based authentication plugin that verifies token sent in cookies
+    """
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
 
+
     def authenticate(self, request):
-        token = request.COOKIES['access_token']
+        token = request.COOKIES.get("access_token")
         validated_token = None
+
+
         if not token:
             msg = _('Access denied')
             raise exceptions.AuthenticationFailed(msg)
@@ -28,5 +34,6 @@ class CookieJWTAuthentication(JWTAuthentication):
     
     def get_user(self, validated_token):
         user = User.objects.get(id=validated_token['user_id'])
+        user.owner_id = user.id
         return user
     

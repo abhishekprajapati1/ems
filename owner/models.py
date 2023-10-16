@@ -25,7 +25,6 @@ class Owner(AbstractBaseUser):
     phone_number = models.CharField(max_length=15)
     pin = models.CharField(max_length=4)
     is_active = models.BooleanField(default=True)
-    is_staff = models.BooleanField(default=False)
     date_joined = models.DateTimeField(default=timezone.now)
 
     objects = OwnerManager()

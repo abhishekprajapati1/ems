@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate, login
-from .serializers import LoginSerializer, SignupSerializer
+from .serializers import LoginSerializer, SignupSerializer, CredentialsSerializers
 from .backends import EmailPasswordBackend
 from owner.models import Owner
 
@@ -15,7 +15,7 @@ class LoginView(APIView):
     
     def post(self, request, format=None):
         serializer = LoginSerializer(data=request.data)
-        if(serializer.is_valid()):
+        if serializer.is_valid():
             email = serializer.validated_data['email']
             password = serializer.validated_data['password']
 
@@ -55,3 +55,15 @@ class SignupView(generics.CreateAPIView):
 
         # Save the owner record
         serializer.save()
+
+
+
+class UpdateCredentialView(APIView):
+
+    def patch(self, request, format=None):
+        serializer = CredentialsSerializers(data=request.data)
+        if serializer.is_valid():
+            password = serializer.validated_data['password']
+            pin = serializer.validated_data['pin']
+        response = Response({'success': True, 'message': "This api is working"}, status=status.HTTP_200_OK)
+        return response

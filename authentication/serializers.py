@@ -14,3 +14,9 @@ class SignupSerializer(serializers.ModelSerializer):
             'password': {'write_only': True, 'min_length': 8},  # Password should be write-only
             'pin': {'write_only': True},  # Pin should be write-only
         }
+
+
+class CredentialsSerializers(serializers.Serializer):
+    class Meta:
+        password = serializers.CharField()
+        pin = serializers.CharField()
