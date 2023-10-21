@@ -24,6 +24,7 @@ class OwnerDetailView(generics.RetrieveUpdateDestroyAPIView):
         
         response = super().update(request, *args, **kwargs)
         sendtoken(req=request, res=response)
+        response.data = {"success": True, "message": "Details updated successfully.", "data": response.data}
         return response
 
     def get_serializer_class(self):
